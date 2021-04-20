@@ -81,7 +81,7 @@ app.get("/events", (req, res) => {
 });
 
 // get all events
-app.get("/mongo", async (req, res) => {
+app.get("/mongo",  (req, res) => {
 
     const {MongoClient} = require("mongodb");
 
