@@ -10,15 +10,7 @@ const jwksRsa = require("jwks-rsa");
 
 // mongo db support
 
-const {MongoClient} = require("mongodb");
 
-const uri = `mongodb+srv://digitalmarker:secretpass@cluster0.v7zq1.mongodb.net/sample_airbnb?retryWrites=true&w=majority`;
-
-
-const client = new MongoClient(uri, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-});
 
 
 app.use(bodyParser.json());
@@ -90,13 +82,24 @@ app.get("/events", (req, res) => {
 
 // get all events
 app.get("/mongo", async (req, res) => {
+
+    const {MongoClient} = require("mongodb");
+
+    const uri = `mongodb+srv://digitalmarker:secretpass@cluster0.v7zq1.mongodb.net/sample_airbnb?retryWrites=true&w=majority`;
+
+
+    const client = new MongoClient(uri, {
+        useNewUrlParser: true,
+        useUnifiedTopology: true,
+    });
+
     async function run() {
         try {
             await client.connect();
             const database = client.db('digitalmarker');
             const user = database.collection('users');
             // Query for a movie that has the title 'Back to the Future'
-            const query = {paid: true};
+            const query = {email: 'example1@gmail.com'};
             const result = await user.findOne(query);
             res.send(result);
             console.log("Done");
