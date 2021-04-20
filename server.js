@@ -90,6 +90,8 @@ app.get("/mongo",  (req, res) => {
 
     const client = new MongoClient(uri, {
         useNewUrlParser: true,
+        useCreateIndex: true,
+        useFindAndModify: false,
         useUnifiedTopology: true,
     });
 
