@@ -6,7 +6,19 @@ const app = express();
 const port = process.env.PORT || 8000;
 const jwt = require("express-jwt");
 const jwksRsa = require("jwks-rsa");
-// stripe support
+
+
+// mongo db support
+
+const {MongoClient} = require("mongodb");
+
+const uri = `mongodb+srv://digitalmarker:secretpass@cluster0.v7zq1.mongodb.net/sample_airbnb?retryWrites=true&w=majority`;
+
+
+const client = new MongoClient(uri, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+});
 
 
 app.use(bodyParser.json());
@@ -76,6 +88,28 @@ app.get("/events", (req, res) => {
     res.send(events);
 });
 
+// get all events
+app.get("/mongo", async (req, res) => {
+    async function run() {
+        try {
+            await client.connect();
+            const database = client.db('digitalmarker');
+            const user = database.collection('users');
+            // Query for a movie that has the title 'Back to the Future'
+            const query = {paid: true};
+            const result = await user.findOne(query);
+            res.send(result);
+            console.log("Done");
+        } finally {
+            // Ensures that the client will close when you finish/error
+            client.close();
+        }
+    }
+
+    run().catch(console.dir);
+
+})
+
 app.get("/events/:id", checkJwt, (req, res) => {
     const id = Number(req.params.id);
     const event = events.find(event => event.id === id);
@@ -87,6 +121,6 @@ app.get("/", (req, res) => {
 });
 
 // listen on the port
-app.listen(port, function (){
+app.listen(port, function () {
     console.log("Server started successfully");
 });
