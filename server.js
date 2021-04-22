@@ -10,9 +10,6 @@ const jwksRsa = require("jwks-rsa");
 
 // mongo db support
 
-
-
-
 app.use(bodyParser.json());
 app.use(
     cors({
@@ -28,7 +25,7 @@ const authConfig = {
 };
 
 // Create middleware to validate the JWT using express-jwt
-const checkJwt = jwt({
+const checkJwt = jwt(   {
     // Provide a signing key based on the key identifier in the header and the signing keys provided by your Auth0 JWKS endpoint.
     secret: jwksRsa.expressJwtSecret({
         cache: true,
@@ -117,6 +114,39 @@ app.get("/events/:id", checkJwt, (req, res) => {
     const id = Number(req.params.id);
     const event = events.find(event => event.id === id);
     res.send(event);
+});
+
+app.get("/subscription/:email", checkJwt, (req, res) => {
+
+    const clientele = req.params.email;
+
+    const {MongoClient} = require("mongodb");
+
+    const uri = `mongodb+srv://digitalmarker:secretpass@cluster0.v7zq1.mongodb.net/sample_airbnb?retryWrites=true&w=majority`;
+
+
+    const client = new MongoClient(uri, {
+        useNewUrlParser: true,
+        useUnifiedTopology: true,
+    });
+
+    async function run() {
+        try {
+            await client.connect();
+            const database = client.db('digitalmarker');
+            const user = database.collection('users');
+            // Query for a movie that has the title 'Back to the Future'
+            const query = {email: clientele};
+            const result = await user.findOne(query);
+            res.send(result);
+            console.log("Done on the server");
+        } finally {
+            // Ensures that the client will close when you finish/error
+            client.close();
+        }
+    }
+
+    run().catch(console.dir);
 });
 
 app.get("/", (req, res) => {
