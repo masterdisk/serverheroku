@@ -22,16 +22,18 @@ app.use(express.urlencoded({extended: true}));
 // Set up Auth0 configuration
 const authConfig = {
     domain: "databaseapp.eu.auth0.com",
+    audience: "https://databaseapp.eu.auth0.com/api/v2/"
 };
 
 // Create middleware to validate the JWT using express-jwt
-const checkJwt = jwt(   {
+const checkJwt = jwt({
     // Provide a signing key based on the key identifier in the header and the signing keys provided by your Auth0 JWKS endpoint.
     secret: jwksRsa.expressJwtSecret({
         cache: true,
         rateLimit: true,
         jwksRequestsPerMinute: 5,
-        jwksUri: `https://${authConfig.domain}/.well-known/jwks.json`
+        jwksUri: `https://${authConfig.domain}/.well-known/jwks.json`,
+        audience: `${authConfig.audience}`,
     }),
 
     // Validate the audience (Identifier) and the issuer (Domain).
@@ -78,7 +80,7 @@ app.get("/events", (req, res) => {
 });
 
 // get all events
-app.get("/mongo",  (req, res) => {
+app.get("/mongo", (req, res) => {
 
     const {MongoClient} = require("mongodb");
 
@@ -116,13 +118,12 @@ app.get("/events/:id", checkJwt, (req, res) => {
     res.send(event);
 });
 
-app.get("/subscription/:email", checkJwt, (req, res) => {
-
+app.get("/subscription/:email", (req, res) => {
     const clientele = req.params.email;
 
     const {MongoClient} = require("mongodb");
 
-    const uri = `mongodb+srv://digitalmarker:secretpass@cluster0.v7zq1.mongodb.net/sample_airbnb?retryWrites=true&w=majority`;
+    const uri = `mongodb+srv://customerprofile:secretpass@cluster0.v7zq1.mongodb.net/sample_airbnb?retryWrites=true&w=majority`;
 
 
     const client = new MongoClient(uri, {
@@ -138,8 +139,7 @@ app.get("/subscription/:email", checkJwt, (req, res) => {
             // Query for a movie that has the title 'Back to the Future'
             const query = {email: clientele};
             const result = await user.findOne(query);
-            res.send(result);
-            console.log("Done on the server");
+            res.send(result.paid);
         } finally {
             // Ensures that the client will close when you finish/error
             client.close();
