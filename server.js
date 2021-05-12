@@ -190,7 +190,7 @@ app.get("/subscription/change/:id", checkJwt, (req, res) => {
     run().catch(console.dir);
 });
 
-app.get("/users/id/:email", (req, res) => {
+app.get("/users/id/:email", checkJwt, (req, res) => {
 
     const clientele = req.params.email;
 
