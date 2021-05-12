@@ -118,7 +118,7 @@ app.get("/events/:id", checkJwt, (req, res) => {
     res.send(event);
 });
 
-app.get("/subscription/verify/:id", checkJwt, (req, res) => {
+app.get("/subscription/verify/:id", (req, res) => {
     const clientele = req.params.id;
 
     const {MongoClient} = require("mongodb");
