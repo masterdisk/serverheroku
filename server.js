@@ -118,7 +118,7 @@ app.get("/events/:id", checkJwt, (req, res) => {
     res.send(event);
 });
 
-app.get("/subscription/verify/:id", (req, res) => {
+app.get("/subscription/verify/:id", checkJwt, (req, res) => {
     const clientele = req.params.id;
 
     const {MongoClient} = require("mongodb");
@@ -190,7 +190,7 @@ app.get("/subscription/change/:id", checkJwt, (req, res) => {
     run().catch(console.dir);
 });
 
-app.get("/users/id/:email", checkJwt, (req, res) => {
+app.get("/users/id/:email", (req, res) => {
 
     const clientele = req.params.email;
 
