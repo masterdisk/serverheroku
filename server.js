@@ -118,7 +118,80 @@ app.get("/events/:id", checkJwt, (req, res) => {
     res.send(event);
 });
 
-app.get("/subscription/verify/:email", checkJwt, (req, res) => {
+app.get("/subscription/verify/:id", checkJwt, (req, res) => {
+    const clientele = req.params.id;
+
+    const {MongoClient} = require("mongodb");
+
+    const uri = `mongodb+srv://customerprofile:secretpass@cluster0.v7zq1.mongodb.net/sample_airbnb?retryWrites=true&w=majority`;
+
+
+    const client = new MongoClient(uri, {
+        useNewUrlParser: true,
+        useUnifiedTopology: true,
+    });
+
+    async function run() {
+        try {
+            await client.connect();
+            const database = client.db('digitalmarker');
+            const user = database.collection('users');
+            // Query for a movie that has the title 'Back to the Future'
+            const query = {client_id: clientele};
+            const result = await user.findOne(query);
+            res.send(result.paid);
+        } finally {
+            // Ensures that the client will close when you finish/error
+            client.close();
+        }
+    }
+
+    run().catch(console.dir);
+});
+
+app.get("/subscription/change/:id", checkJwt, (req, res) => {
+    const clientele = req.params.id;
+
+    const {MongoClient} = require("mongodb");
+
+    const uri = `mongodb+srv://paymentprofile:secretpass@cluster0.v7zq1.mongodb.net/sample_airbnb?retryWrites=true&w=majority`;
+
+    const client = new MongoClient(uri, {
+        useNewUrlParser: true,
+        useUnifiedTopology: true,
+    });
+
+    async function run() {
+        try {
+            await client.connect();
+            const database = client.db('digitalmarker');
+            const user = database.collection('users');
+
+            // create a filter for a movie to update
+            const filter = {client_id: clientele};
+
+            // create a document that sets the plot of the movie
+            const updateDoc = {
+                $set: {
+                    paid:
+                        true,
+                },
+            };
+
+            const result = await user.updateOne(filter, updateDoc);
+            res.send(true);
+
+        } finally {
+            // Ensures that the client will close when you finish/error
+            client.close();
+        }
+    }
+
+    run().catch(console.dir);
+});
+
+app.get("/users/id/:email", checkJwt, (req, res) => {
+
     const clientele = req.params.email;
 
     const {MongoClient} = require("mongodb");
@@ -139,7 +212,7 @@ app.get("/subscription/verify/:email", checkJwt, (req, res) => {
             // Query for a movie that has the title 'Back to the Future'
             const query = {email: clientele};
             const result = await user.findOne(query);
-            res.send(result.paid);
+            res.send(result.client_id);
         } finally {
             // Ensures that the client will close when you finish/error
             client.close();
@@ -147,47 +220,7 @@ app.get("/subscription/verify/:email", checkJwt, (req, res) => {
     }
 
     run().catch(console.dir);
-});
 
-app.get("/subscription/change/:email",checkJwt, (req, res) => {
-    const clientele = req.params.email;
-
-    const {MongoClient} = require("mongodb");
-
-    const uri = `mongodb+srv://paymentprofile:secretpass@cluster0.v7zq1.mongodb.net/sample_airbnb?retryWrites=true&w=majority`;
-
-    const client = new MongoClient(uri, {
-        useNewUrlParser: true,
-        useUnifiedTopology: true,
-    });
-
-    async function run() {
-        try {
-            await client.connect();
-            const database = client.db('digitalmarker');
-            const user = database.collection('users');
-
-            // create a filter for a movie to update
-            const filter = { email: clientele };
-
-            // create a document that sets the plot of the movie
-            const updateDoc = {
-                $set: {
-                    paid:
-                        true,
-                },
-            };
-
-            const result = await user.updateOne(filter, updateDoc);
-            res.send(true);
-
-        } finally {
-            // Ensures that the client will close when you finish/error
-            client.close();
-        }
-    }
-
-    run().catch(console.dir);
 });
 
 app.get("/", (req, res) => {
