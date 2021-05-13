@@ -223,6 +223,35 @@ app.get("/users/id/:email", checkJwt, (req, res) => {
 
 });
 
+app.get("/data", checkJwt, (req, res) => {
+
+    const {MongoClient} = require("mongodb");
+
+    const uri = `mongodb+srv://customerprofile:secretpass@cluster0.v7zq1.mongodb.net/sample_airbnb?retryWrites=true&w=majority`;
+
+    const client = new MongoClient(uri, {
+        useNewUrlParser: true,
+        useUnifiedTopology: true,
+    });
+
+    async function run() {
+        try {
+            await client.connect();
+            const database = client.db('digitalmarker');
+            const user = database.collection('superfamilies');
+            // Query for a movie that has the title 'Back to the Future'
+            const result = await user.find({}).toArray();
+            res.send(result);
+        } finally {
+            // Ensures that the client will close when you finish/error
+            client.close();
+        }
+    }
+
+    run().catch(console.dir);
+
+});
+
 app.get("/", (req, res) => {
     res.send(`Hi! Server is listening on port ${port}`);
 });
