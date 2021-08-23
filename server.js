@@ -5,14 +5,13 @@ const cors = require("cors");
 const app = express();
 const port = process.env.PORT || 8000;
 
-
 app.use(bodyParser.json());
-app.use( cors({
-        credentials: true,
-        origin: true
-    }) );
-
+app.use(cors({
+    credentials: true,
+    origin: true
+}));
 app.use(express.urlencoded({extended: true}));
+
 
 // mock data to send to our frontend
 let events = [
@@ -49,6 +48,10 @@ let events = [
 // get all events
 app.get("/events", (req, res) => {
     res.send(events);
+});
+
+app.get("/", (req, res) => {
+    res.send(`Hi Eduard-oh! Server is listening on port ${port}`);
 });
 
 // listen on the port
