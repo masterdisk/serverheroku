@@ -253,7 +253,7 @@ app.get("/data", checkJwt, (req, res) => {
 });
 
 app.get("/", (req, res) => {
-    res.send(`Hi! Server is listening on port ${port}`);
+    res.send(`Hi Eduard-oh! Server is listening on port ${port}`);
 });
 
 // listen on the port
