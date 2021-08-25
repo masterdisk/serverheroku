@@ -62,8 +62,6 @@ app.get("/visma/demo", async (req, res, next) => {
                 'Content-Type': "application/json"
             }
         });
-
-        console.log(apicall.data);
         res.send(apicall.data);
     } catch (err) {
         console.log(err);
@@ -119,24 +117,6 @@ app.get("/visma/invoices", async (req, res, next) => {
         console.log(err);
     }
 
-})
-
-app.get("/visma/", async (req, res, next) => {
-
-    try {
-        const apicall = await axios.get(("https://restapi.e-conomic.com/customers"), {
-            headers: {
-                'X-AppSecretToken': "demo",
-                'X-AgreementGrantToken': "demo",
-                'Content-Type': "application/json"
-            }
-        });
-
-        console.log(apicall.data);
-        res.send(apicall.data);
-    } catch (err) {
-        console.log(err);
-    }
 })
 
 app.get("/echo", (req, res) => {
