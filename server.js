@@ -57,7 +57,72 @@ app.get("/events", (req, res) => {
     res.send(events);
 });
 
+app.get("/visma/demo", async (req, res, next) => {
 
+    try {
+        const apicall = await axios.get(("https://restapi.e-conomic.com/customers"), {
+            headers: {
+                'X-AppSecretToken': "demo",
+                'X-AgreementGrantToken': "demo",
+                'Content-Type': "application/json"
+            }
+        });
+        res.send(apicall.data);
+    } catch (err) {
+        console.log(err);
+    }
+}) //template visma GET - HTTPS Request
+
+app.get("/visma/customers", async (req, res, next) => {
+
+    try {
+        const apicall = await axios.get(("https://restapi.e-conomic.com/customers"), {
+            headers: {
+                'X-AppSecretToken': "3BHJkhRDuI1VRQr03bJm6pGPukQ8EhWjgGfMdFfEef41",
+                'X-AgreementGrantToken': "oi1YjRUh16ZGAuNSAwRlmnHvEtyPedUBN02xl3B4Yuo1",
+                'Content-Type': "application/json"
+            }
+        });
+        res.send(apicall.data);
+    } catch (err) {
+        console.log(err);
+    }
+
+})
+
+app.get("/visma/orders", async (req, res, next) => {
+
+    try {
+        const apicall = await axios.get(("https://restapi.e-conomic.com/orders"), {
+            headers: {
+                'X-AppSecretToken': "3BHJkhRDuI1VRQr03bJm6pGPukQ8EhWjgGfMdFfEef41",
+                'X-AgreementGrantToken': "oi1YjRUh16ZGAuNSAwRlmnHvEtyPedUBN02xl3B4Yuo1",
+                'Content-Type': "application/json"
+            }
+        });
+        res.send(apicall.data);
+    } catch (err) {
+        console.log(err);
+    }
+
+})
+
+app.get("/visma/invoices", async (req, res, next) => {
+
+    try {
+        const apicall = await axios.get(("https://restapi.e-conomic.com/invoices/booked"), {
+            headers: {
+                'X-AppSecretToken': "3BHJkhRDuI1VRQr03bJm6pGPukQ8EhWjgGfMdFfEef41",
+                'X-AgreementGrantToken': "oi1YjRUh16ZGAuNSAwRlmnHvEtyPedUBN02xl3B4Yuo1",
+                'Content-Type': "application/json"
+            }
+        });
+        res.send(apicall.data);
+    } catch (err) {
+        console.log(err);
+    }
+
+})
 
 app.get("/", (req, res) => {
     res.send(`Hi! Server is listening on port ${port}`);
