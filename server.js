@@ -19,28 +19,7 @@ app.use(
 );
 app.use(express.urlencoded({extended: true}));
 
-// Set up Auth0 configuration
-const authConfig = {
-    domain: "databaseapp.eu.auth0.com",
-    audience: "https://databaseapp.eu.auth0.com/api/v2/"
-};
 
-// Create middleware to validate the JWT using express-jwt
-const checkJwt = jwt({
-    // Provide a signing key based on the key identifier in the header and the signing keys provided by your Auth0 JWKS endpoint.
-    secret: jwksRsa.expressJwtSecret({
-        cache: true,
-        rateLimit: true,
-        jwksRequestsPerMinute: 5,
-        jwksUri: `https://${authConfig.domain}/.well-known/jwks.json`,
-        audience: `${authConfig.audience}`,
-    }),
-
-    // Validate the audience (Identifier) and the issuer (Domain).
-    audience: authConfig.audience,
-    issuer: `https://${authConfig.domain}/`,
-    algorithms: ["RS256"]
-});
 
 // mock data to send to our frontend
 let events = [
