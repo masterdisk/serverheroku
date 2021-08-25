@@ -2,10 +2,10 @@
 const express = require("express");
 const bodyParser = require("body-parser");
 const cors = require("cors");
+const axios = require("axios");
 const app = express();
 const port = process.env.PORT || 8000;
-const jwt = require("express-jwt");
-const jwksRsa = require("jwks-rsa");
+
 
 
 // mongo db support
