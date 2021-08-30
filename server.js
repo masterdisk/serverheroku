@@ -74,7 +74,6 @@ app.get("/visma/demo", async (req, res, next) => {
 }) //template visma GET - HTTPS Request
 
 //Customers
-
 app.get("/visma/customers", async (req, res, next) => {
 
     try {
@@ -92,8 +91,26 @@ app.get("/visma/customers", async (req, res, next) => {
 
 })
 
-//Orders
+app.get("/visma/customers/:id", async (req, res, next) => {
 
+    param = req.params.id;
+
+    try {
+        const apicall = await axios.get(("https://restapi.e-conomic.com/customers/" + param), {
+            headers: {
+                'X-AppSecretToken': "3BHJkhRDuI1VRQr03bJm6pGPukQ8EhWjgGfMdFfEef41",
+                'X-AgreementGrantToken': "oi1YjRUh16ZGAuNSAwRlmnHvEtyPedUBN02xl3B4Yuo1",
+                'Content-Type': "application/json"
+            }
+        });
+        res.send(toJSON(apicall)[5]);
+    } catch (err) {
+        console.log(err);
+    }
+
+})
+
+//Orders - Experimental
 app.get("/visma/orders", async (req, res, next) => {
 
     try {
@@ -111,7 +128,47 @@ app.get("/visma/orders", async (req, res, next) => {
 
 })
 
+
+
 //Invoices
+
+app.get("/visma/invoices/drafts", async (req, res, next) => {
+
+    try {
+        const apicall = await axios.get(("https://restapi.e-conomic.com/invoices/drafts"), {
+            headers: {
+                'X-AppSecretToken': "3BHJkhRDuI1VRQr03bJm6pGPukQ8EhWjgGfMdFfEef41",
+                'X-AgreementGrantToken': "oi1YjRUh16ZGAuNSAwRlmnHvEtyPedUBN02xl3B4Yuo1",
+                'Content-Type': "application/json"
+            }
+        });
+        res.send(apicall.data);
+    } catch (err) {
+        console.log(err);
+    }
+
+})  // GET drafts invoices
+
+app.get("/visma/invoices/drafts/:id", async (req, res, next) => {
+
+    param = req.params.id;
+
+    try {
+        const apicall = await axios.get(("https://restapi.e-conomic.com/invoices/drafts/" + param), {
+            headers: {
+                'X-AppSecretToken': "3BHJkhRDuI1VRQr03bJm6pGPukQ8EhWjgGfMdFfEef41",
+                'X-AgreementGrantToken': "oi1YjRUh16ZGAuNSAwRlmnHvEtyPedUBN02xl3B4Yuo1",
+                'Content-Type': "application/json"
+            }
+        });
+        res.send(toJSON(apicall)[5]);
+    } catch (err) {
+        console.log(err);
+    }
+
+}) // Get drafts invoices based on number
+
+
 
 app.get("/visma/invoices/booked", async (req, res, next) => {
 
@@ -129,6 +186,65 @@ app.get("/visma/invoices/booked", async (req, res, next) => {
     }
 
 })  // GET booked invoices
+
+app.get("/visma/invoices/booked/:id", async (req, res, next) => {
+
+    param = req.params.id;
+
+    try {
+        const apicall = await axios.get(("https://restapi.e-conomic.com/invoices/booked/" + param), {
+            headers: {
+                'X-AppSecretToken': "3BHJkhRDuI1VRQr03bJm6pGPukQ8EhWjgGfMdFfEef41",
+                'X-AgreementGrantToken': "oi1YjRUh16ZGAuNSAwRlmnHvEtyPedUBN02xl3B4Yuo1",
+                'Content-Type': "application/json"
+            }
+        });
+        res.send(toJSON(apicall)[5]);
+    } catch (err) {
+        console.log(err);
+    }
+
+}) // Get booked invoices based on number
+
+
+
+app.get("/visma/invoices/sent", async (req, res, next) => {
+
+    try {
+        const apicall = await axios.get(("https://restapi.e-conomic.com/invoices/sent"), {
+            headers: {
+                'X-AppSecretToken': "3BHJkhRDuI1VRQr03bJm6pGPukQ8EhWjgGfMdFfEef41",
+                'X-AgreementGrantToken': "oi1YjRUh16ZGAuNSAwRlmnHvEtyPedUBN02xl3B4Yuo1",
+                'Content-Type': "application/json"
+            }
+        });
+        res.send(apicall.data);
+    } catch (err) {
+        console.log(err);
+    }
+
+})  // GET sent invoices
+
+app.get("/visma/invoices/sent/:id", async (req, res, next) => {
+
+    param = req.params.id;
+
+    try {
+        const apicall = await axios.get(("https://restapi.e-conomic.com/invoices/sent/" + param), {
+            headers: {
+                'X-AppSecretToken': "3BHJkhRDuI1VRQr03bJm6pGPukQ8EhWjgGfMdFfEef41",
+                'X-AgreementGrantToken': "oi1YjRUh16ZGAuNSAwRlmnHvEtyPedUBN02xl3B4Yuo1",
+                'Content-Type': "application/json"
+            }
+        });
+        res.send(toJSON(apicall)[5]);
+    } catch (err) {
+        console.log(err);
+    }
+
+}) // Get sent invoices based on number
+
+
 
 app.get("/visma/invoices/post", async (req, res, next) => {
 
@@ -245,7 +361,7 @@ app.get("/visma/invoices/post", async (req, res, next) => {
         });
 
         res.send(toJSON(apicall));
-        console.log("apicall");
+
 
     } catch (err) {
         console.log(err);
@@ -269,6 +385,58 @@ app.get("/visma/invoices/sent", async (req, res, next) => {
     }
 
 })  //GET invoices sent
+
+app.get("/visma/invoices/paid", async (req, res, next) => {
+
+    try {
+        const apicall = await axios.get(("https://restapi.e-conomic.com/invoices/paid"), {
+            headers: {
+                'X-AppSecretToken': "3BHJkhRDuI1VRQr03bJm6pGPukQ8EhWjgGfMdFfEef41",
+                'X-AgreementGrantToken': "oi1YjRUh16ZGAuNSAwRlmnHvEtyPedUBN02xl3B4Yuo1",
+                'Content-Type': "application/json"
+            }
+        });
+        res.send(apicall.data);
+    } catch (err) {
+        console.log(err);
+    }
+
+})  // GET paid invoices
+
+app.get("/visma/invoices/unpaid", async (req, res, next) => {
+
+    try {
+        const apicall = await axios.get(("https://restapi.e-conomic.com/invoices/unpaid"), {
+            headers: {
+                'X-AppSecretToken': "3BHJkhRDuI1VRQr03bJm6pGPukQ8EhWjgGfMdFfEef41",
+                'X-AgreementGrantToken': "oi1YjRUh16ZGAuNSAwRlmnHvEtyPedUBN02xl3B4Yuo1",
+                'Content-Type': "application/json"
+            }
+        });
+        res.send(apicall.data);
+    } catch (err) {
+        console.log(err);
+    }
+
+})  // GET unpaid invoices
+
+app.get("/visma/invoices/totals", async (req, res, next) => {
+
+    try {
+        const apicall = await axios.get(("https://restapi.e-conomic.com/invoices/totals"), {
+            headers: {
+                'X-AppSecretToken': "3BHJkhRDuI1VRQr03bJm6pGPukQ8EhWjgGfMdFfEef41",
+                'X-AgreementGrantToken': "oi1YjRUh16ZGAuNSAwRlmnHvEtyPedUBN02xl3B4Yuo1",
+                'Content-Type': "application/json"
+            }
+        });
+        res.send(apicall.data);
+    } catch (err) {
+        console.log(err);
+    }
+
+})  // GET totals invoices
+
 
 
 //Root
