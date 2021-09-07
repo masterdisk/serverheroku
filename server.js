@@ -19,6 +19,7 @@ app.use(
 );
 app.use(express.urlencoded({extended: true}));
 
+//////////////VISMA/////////////////////
 
 // mock data to send to our frontend
 let events = [
@@ -129,7 +130,6 @@ app.get("/visma/orders", async (req, res, next) => {
 })
 
 
-
 //Invoices
 
 app.get("/visma/invoices/drafts", async (req, res, next) => {
@@ -169,7 +169,6 @@ app.get("/visma/invoices/drafts/:id", async (req, res, next) => {
 }) // Get drafts invoices based on number
 
 
-
 app.get("/visma/invoices/booked", async (req, res, next) => {
 
     try {
@@ -207,7 +206,6 @@ app.get("/visma/invoices/booked/:id", async (req, res, next) => {
 }) // Get booked invoices based on number
 
 
-
 app.get("/visma/invoices/sent", async (req, res, next) => {
 
     try {
@@ -243,7 +241,6 @@ app.get("/visma/invoices/sent/:id", async (req, res, next) => {
     }
 
 }) // Get sent invoices based on number
-
 
 
 app.get("/visma/invoices/post", async (req, res, next) => {
@@ -437,9 +434,224 @@ app.get("/visma/invoices/totals", async (req, res, next) => {
 
 })  // GET totals invoices
 
+//////////////SHIPMONDO/////////////////////
 
+app.get("/shipmondo/account/balance", async (req, res, next) => {
+
+    try {
+        const apicall = await axios.get(("https://app.shipmondo.com/api/public/v3/account/balance/"), {
+            method: 'GET',
+            url: 'https://app.shipmondo.com/api/public/v3/account/balance',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': 'Basic NDllNTZkNzQtYjZmNy00M2QxLWFlMDItZjMxMTZmM2QzYWE4Ojg1MGNjYjljLTM1OGYtNGY0NC05ZmFmLWIxYjMzNDdjYmNlNA=='
+            }
+        });
+        res.send(apicall.data);
+    } catch (err) {
+        console.log(err);
+    }
+
+})  // GET account balance
+
+app.get("/shipmondo/account/payment_requests", async (req, res, next) => {
+
+    try {
+        const apicall = await axios.get(("https://app.shipmondo.com/api/public/v3/account/payment_requests/"), {
+            method: 'GET',
+            url: 'https://app.shipmondo.com/api/public/v3/account/payment_requests',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': 'Basic NDllNTZkNzQtYjZmNy00M2QxLWFlMDItZjMxMTZmM2QzYWE4Ojg1MGNjYjljLTM1OGYtNGY0NC05ZmFmLWIxYjMzNDdjYmNlNA=='
+            }
+        });
+        res.send(apicall.data);
+    } catch (err) {
+        console.log(err);
+    }
+
+})  // GET account payment requests
+
+app.get("/shipmondo/carriers", async (req, res, next) => {
+
+    try {
+        const apicall = await axios.get(("https://app.shipmondo.com/api/public/v3/carriers/"), {
+            method: 'GET',
+            params: {country_code: 'DK'},
+            url: 'https://app.shipmondo.com/api/public/v3/account/carriers',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': 'Basic NDllNTZkNzQtYjZmNy00M2QxLWFlMDItZjMxMTZmM2QzYWE4Ojg1MGNjYjljLTM1OGYtNGY0NC05ZmFmLWIxYjMzNDdjYmNlNA=='
+            }
+        });
+        res.send(apicall.data);
+    } catch (err) {
+        console.log(err);
+    }
+
+})  // GET carriers
+
+app.get("/shipmondo/products/:id", async (req, res, next) => {
+
+
+    try {
+        const apicall = await axios.get(("https://app.shipmondo.com/api/public/v3/products/"), {
+            method: 'GET',
+            url: 'https://app.shipmondo.com/api/public/v3/account/products/',
+            params: {carrier_code: req.params.id},
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': 'Basic NDllNTZkNzQtYjZmNy00M2QxLWFlMDItZjMxMTZmM2QzYWE4Ojg1MGNjYjljLTM1OGYtNGY0NC05ZmFmLWIxYjMzNDdjYmNlNA=='
+            }
+        });
+        res.send(apicall.data);
+    } catch (err) {
+        res.send(err);
+    }
+
+}) // GET products by id pdk/gls/dao
+
+//Orders fpr Shipmondo and Visma
+
+app.get("/visma/invoices/post", async (req, res, next) => {
+
+    invoice = {
+        "date": "2014-08-08",
+        "currency": "DKK",
+        "exchangeRate": 100,
+        "netAmount": 10.00,
+        "netAmountInBaseCurrency": 0.00,
+        "grossAmount": 12.50,
+        "marginInBaseCurrency": -46.93,
+        "marginPercentage": 0.0,
+        "vatAmount": 2.50,
+        "roundingAmount": 0.00,
+        "costPriceInBaseCurrency": 46.93,
+        "paymentTerms": {
+            "paymentTermsNumber": 1,
+            "daysOfCredit": 14,
+            "name": "Lobende maned 14 dage",
+        },
+        "customer": {
+            "customerNumber": 1
+        },
+        "recipient": {
+            "name": "Toj & Co Grossisten",
+            "address": "Vejlevej 21",
+            "zip": "7000",
+            "city": "Fredericia",
+            "vatZone": {
+                "name": "Domestic",
+                "vatZoneNumber": 1,
+                "enabledForCustomer": true,
+                "enabledForSupplier": true
+            }
+        },
+        "delivery": {
+            "address": "Hovedvejen 1",
+            "zip": "2300",
+            "city": "Kbh S",
+            "country": "Denmark",
+            "deliveryDate": "2014-09-14"
+        },
+        "references": {
+            "other": "aaaa"
+        },
+        "layout": {
+            "layoutNumber": 19
+        },
+        "lines": [
+            {
+                "lineNumber": 1,
+                "sortKey": 1,
+                "unit": {
+                    "unitNumber": 2,
+                    "name": "Tim"
+                },
+                "product": {
+                    "productNumber": "1"
+                },
+                "quantity": 1.00,
+                "unitNetPrice": 10.00,
+                "discountPercentage": 0.00,
+                "unitCostPrice": 46.93,
+                "totalNetAmount": 10.00,
+                "marginInBaseCurrency": -46.93,
+                "marginPercentage": 0.0
+            },
+            {
+                "lineNumber": 1,
+                "sortKey": 1,
+                "unit": {
+                    "unitNumber": 1,
+                    "name": "stk."
+                },
+                "product": {
+                    "productNumber": "1"
+                },
+                "quantity": 1.00,
+                "unitNetPrice": 10.00,
+                "discountPercentage": 0.00,
+                "unitCostPrice": 46.93,
+                "totalNetAmount": 10.00,
+                "marginInBaseCurrency": -46.93,
+                "marginPercentage": 0.0
+            },
+            {
+                "lineNumber": 1,
+                "sortKey": 1,
+                "unit": {
+                    "unitNumber": 4
+                },
+                "product": {
+                    "productNumber": "1"
+                },
+                "quantity": 1.00,
+                "unitNetPrice": 10.00,
+                "discountPercentage": 0.00,
+                "unitCostPrice": 46.93,
+                "totalNetAmount": 10.00,
+                "marginInBaseCurrency": -46.93,
+                "marginPercentage": 0.0
+            }
+        ]
+    };
+
+    try {
+
+        const visma_apicall = await axios.get("https://restapi.e-conomic.com/customers", {
+            headers: {
+                'X-AppSecretToken': "3BHJkhRDuI1VRQr03bJm6pGPukQ8EhWjgGfMdFfEef41",
+                'X-AgreementGrantToken': "oi1YjRUh16ZGAuNSAwRlmnHvEtyPedUBN02xl3B4Yuo1",
+                'Content-Type': "application/json"
+            }
+        });
+
+        console.log(visma_apicall);
+
+    } catch (err) {
+        console.log(err);
+    }
+
+
+    try {
+        const shipmondo_apicall = await axios.get(" ", {
+            headers: {
+                'X-AppSecretToken': "feadbf9a-9a3e-4edc-b819-3e67b3ba83a9",
+                'X-AgreementGrantToken': "4c96b50f-76fc-41f9-8737-5ed8a29d8685",
+                'Content-Type': "application/json"
+            }
+        });
+
+
+    } catch (err) {
+
+    }
+
+}) //POST invoice without number (yet)
 
 //Root
+
 app.get("/", (req, res) => {
     res.send(`Hi! Server is listening on port ${port}`);
 });
